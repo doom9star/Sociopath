@@ -1,11 +1,12 @@
 import { Request, Response, Router } from "express";
 import jwt from "jsonwebtoken";
 import { v4 } from "uuid";
+import Notification from "../entity/Notification";
 
 import { Profile } from "../entity/Profile";
 import { User } from "../entity/User";
 import { authenticate } from "../ts/middlewares";
-import { AuthRequest } from "../ts/types";
+import { AuthRequest, NotificationType } from "../ts/types";
 import { Utils } from "../ts/utils";
 
 const router = Router();
@@ -40,8 +41,16 @@ router.post(
         httpOnly: true,
       });
 
+      const notification = new Notification();
+      notification.type = NotificationType.ADMIN;
+      notification.reciever = <any>{ id: user.profile.id };
+      await notification.save();
+
       return res.json(
-        Utils.getResponse<{ name: string }>(200, { name: uniqueName })
+        Utils.getResponse<{ [k: string]: any }>(200, {
+          name: uniqueName,
+          createdAt: user.profile.createdAt,
+        })
       );
     } catch (err) {
       console.error(err);

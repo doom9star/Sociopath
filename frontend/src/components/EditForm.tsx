@@ -178,11 +178,12 @@ function EditForm({ autoName }: Props) {
         />
       </div>
       <textarea
-        className="w-full border border-gray-300 p-4 h-40 focus:outline-none"
+        className="w-full text-gray-700 border border-gray-300 p-4 h-40 focus:outline-none"
         placeholder="Write something about yourself..."
         value={info.bio}
         name="bio"
         onChange={onChange}
+        spellCheck={false}
       ></textarea>
       <div className="w-1/3 ml-auto mt-4">
         <Button

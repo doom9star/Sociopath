@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import React from "react";
+import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import Button from "../components/custom/Button";
 import Input from "../components/custom/Input";
@@ -31,6 +32,8 @@ function Register() {
   const [slideNo, setSlideNo] = React.useState(1);
   const [autoName, setAutoName] = React.useState("");
 
+  const client = useQueryClient();
+
   const onChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -50,18 +53,22 @@ function Register() {
       errors.confirmPassword = "Password doesn't match!";
     setErrors(errors);
     if (JSON.stringify(errors) === "{}") {
-      const { data }: AxiosResponse<IJsonResponse<{ name: string }>> =
+      const { data }: AxiosResponse<IJsonResponse<{ [k: string]: any }>> =
         await axios.post("/auth/register", {
           email: info.email,
           password: info.password,
         });
       if (data.status === 200) {
         setAutoName(data.body.name);
+        client.setQueryData(["me", "profile"], (old: any) => ({
+          ...old,
+          createdAt: data.body.createdAt,
+        }));
         setSlideNo(2);
       }
     }
     setLoading(false);
-  }, [info]);
+  }, [info, client]);
 
   return (
     <div

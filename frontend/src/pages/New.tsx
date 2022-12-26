@@ -107,7 +107,6 @@ function New() {
         autoFocus
         placeholder="Write some body..."
         className="border border-gray-200 w-full h-1/4 p-4 focus:outline-none text-gray-600 mt-10"
-        style={{ fontFamily: "cursive" }}
         value={body}
         onChange={(e) => setBody(e.target.value)}
       ></textarea>

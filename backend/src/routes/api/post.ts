@@ -50,7 +50,7 @@ router.delete(
       where: { id: req.params.postId },
       relations: ["images"],
     });
-    post.images.forEach(async (img) => await img.remove());
+    await Promise.all(post.images.map(async (img) => await img.remove()));
     await Like.delete({ post });
     await Comment.delete({ post });
     await post.remove();

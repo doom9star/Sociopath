@@ -16,14 +16,14 @@ import { IORouter } from "./io";
   await createConnection();
   const app = express();
 
-  app.use(cors({ credentials: true, origin: process.env.WEB_URL }));
+  app.use(cors({ credentials: true, origin: process.env.FRONTEND }));
   app.use(cookieParser());
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use("/", MainRouter);
 
   const httpServer = http.createServer(app);
   const IO = new SocketIO.Server(httpServer, {
-    cors: { credentials: true, origin: process.env.WEB_URL },
+    cors: { credentials: true, origin: process.env.FRONTEND },
   });
   IO.use(IOAuthenticate);
   IORouter(IO as any);
@@ -31,4 +31,4 @@ import { IORouter } from "./io";
   httpServer.listen(process.env.PORT, () => {
     Utils.log(`Server started at port ${process.env.PORT}`, "INFO");
   });
-})();
+})()

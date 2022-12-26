@@ -56,7 +56,7 @@ function PostDetail({
         <div className="mb-4">
           <textarea
             placeholder="Write a comment..."
-            className="p-4 mb-2 w-full outline-none border-2 text-lg text-gray-700"
+            className="p-4 mb-2 w-full outline-none border-2 text-sm text-gray-700"
             style={{ fontFamily: "Josefin Sons" }}
             autoFocus={true}
             value={commentBody}

@@ -8,6 +8,7 @@ import BackButton from "./BackButton";
 import Button from "./custom/Button";
 import Spinner from "./custom/Spinner";
 import Post from "./Post";
+import { getDate } from "../ts/utils";
 
 function Profile({
   match: {
@@ -25,6 +26,7 @@ function Profile({
 
   if (proResult.isLoading || proResult.isFetching) return <Spinner />;
 
+  console.log(profile);
   return (
     <>
       {pid !== "me" && <BackButton />}
@@ -44,31 +46,6 @@ function Profile({
                   <i className="text-gray-400">@</i>
                   {profile?.name}
                 </span>
-                <div className="flex flex-col lg:flex-row text-sm mt-2 text-gray-400">
-                  {profile?.location && (
-                    <span className="lg:mr-8 ">
-                      <i className="fas fa-map-marker-alt mr-2 text-purple-500"></i>
-                      <span>{profile.location}</span>
-                    </span>
-                  )}
-                  {profile?.occupation && (
-                    <span className="mx-8">
-                      <i className="fas fa-building mr-2 text-purple-500 "></i>
-                      <span>{profile.occupation}</span>
-                    </span>
-                  )}
-                  {profile?.weblink && (
-                    <span className="mx-8">
-                      <i className="fas fa-link mr-2 text-purple-500"></i>
-                      <a
-                        href="www.google.com"
-                        className="hover:underline text-gray-400"
-                      >
-                        {profile.weblink}
-                      </a>
-                    </span>
-                  )}
-                </div>
               </div>
             </div>
             <div className="flex flex-col justify-center">
@@ -131,22 +108,52 @@ function Profile({
               )}
             </div>
           </div>
-          <div className="mt-8">
-            <div
-              className="mb-2 text-sm text-gray-600"
-              style={{ fontFamily: "Josefin Sons" }}
-            ></div>
+          <div className="flex flex-col mt-4 ml-4">
+            <div className="flex flex-col text-sm text-gray-400">
+              <div className="flex items-center">
+                <i className="fas fa-calendar mr-2 text-purple-500"></i>
+                <span className="whitespace-nowrap">
+                  {getDate(profile?.createdAt!)}
+                </span>
+              </div>
+              {profile?.location && (
+                <div className="flex mt-2 items-center">
+                  <i className="fas fa-map-marker-alt mr-2 text-purple-500"></i>
+                  <span className="whitespace-nowrap">{profile.location}</span>
+                </div>
+              )}
+              {profile?.occupation && (
+                <div className="flex mt-2 items-center">
+                  <i className="fas fa-building mr-2 text-purple-500 "></i>
+                  <span className="whitespace-nowrap">
+                    {profile.occupation}
+                  </span>
+                </div>
+              )}
+              {profile?.weblink && (
+                <div className="flex mt-2 items-center">
+                  <i className="fas fa-link mr-2 text-purple-500"></i>
+                  <a
+                    href="www.google.com"
+                    className="hover:underline text-gray-400 whitespace-nowrap"
+                  >
+                    {profile.weblink}
+                  </a>
+                </div>
+              )}
+            </div>
             {profile?.bio && (
               <div
-                className="mt-6 text-gray-500 flex flex-col items-center"
+                className="text-gray-500 flex flex-col items-center"
                 style={{
                   wordSpacing: "0.2em",
-                  fontFamily: "Josefin Sons",
                   whiteSpace: "pre-wrap",
                 }}
               >
-                <i className="fas fa-fan text-purple-600 mb-2"></i>
-                <span>{profile.bio}</span>
+                <>
+                  <i className="fas fa-fan text-purple-600 mb-2"></i>
+                  <span className="text-sm">{profile.bio}</span>
+                </>
               </div>
             )}
           </div>

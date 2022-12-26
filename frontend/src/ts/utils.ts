@@ -10,3 +10,8 @@ export function cleanObject(o: Record<any, any>): object {
   });
   return co;
 }
+
+export function getDate(d: string): string {
+  const date = new Date(d);
+  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+}

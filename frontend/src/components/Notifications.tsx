@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 import { useQueryData } from "../hooks/useQueryData";
 import socket from "../socket";
-import { INotification, NotificationType } from "../ts/types";
+import { INotification, IProfile, NotificationType } from "../ts/types";
 
 type Props = {
   hide: () => void;
@@ -11,6 +11,7 @@ type Props = {
 
 const Notifications: React.FC<Props> = ({ hide }) => {
   const notifications = useQueryData<INotification[]>("notifications");
+  const profile = useQueryData<IProfile>(["me", "profile"]);
 
   React.useEffect(() => {
     if (notifications) {
@@ -44,22 +45,31 @@ const Notifications: React.FC<Props> = ({ hide }) => {
                   n.type === NotificationType.COMMENT ||
                   n.type === NotificationType.REPLY
                 ? `/home/post/${n.post?.id}`
-                : ""
+                : "#"
             }
             onClick={hide}
             key={n.id}
             className="w-full bg-gray-100 px-4 flex items-center my-1 py-2 cursor-pointer hover:bg-white"
           >
             <img
-              src={n.creator?.avatar ? n.creator.avatar.url : "/noImg.jpg"}
+              src={
+                n.type === NotificationType.ADMIN
+                  ? "/logo.png"
+                  : n.creator?.avatar
+                  ? n.creator.avatar.url
+                  : "/noImg.jpg"
+              }
               alt="avatar"
-              className="mr-2 w-14 h-14 rounded-full"
+              className="mr-2 w-14 h-14 rounded-full object-contain"
             />
             <div className="flex flex-col w-full">
               <div className="flex items-center justify-between">
                 <p className="py-4 text-sm font-semibold text-gray-600">
                   <span className="font-bold text-gray-800 text-base">
-                    @{n.creator?.name}
+                    @
+                    {n.type === NotificationType.ADMIN
+                      ? profile?.name
+                      : n.creator?.name}
                   </span>{" "}
                   {n.type === NotificationType.FOLLOW
                     ? "started following you!"
@@ -69,6 +79,8 @@ const Notifications: React.FC<Props> = ({ hide }) => {
                     ? "liked your post!"
                     : n.type === NotificationType.REPLY
                     ? "replied to your comment!"
+                    : n.type === NotificationType.ADMIN
+                    ? ", we welcome you to our social world!"
                     : null}
                 </p>
                 {n.post && n.post.images.length > 0 && (

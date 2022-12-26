@@ -11,6 +11,7 @@ export enum NotificationType {
   COMMENT,
   REPLY,
   LIKE,
+  ADMIN,
 }
 
 export enum WorldPostType {
