@@ -1,7 +1,7 @@
-import produce from "immer";
+import { produce } from "immer";
 import React from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import Button from "../components/custom/Button";
 import Input from "../components/custom/Input";
@@ -11,33 +11,25 @@ import { useFollow } from "../hooks/useFollow";
 import { axios } from "../ts/constants";
 import { IFollow, IJsonResponse } from "../ts/types";
 
-type Props = RouteComponentProps<
-  { 0: "followers" | "following"; pid: string },
-  {}
->;
-
-function Follow({
-  match: {
-    params: { "0": type, pid = "me" },
-  },
-}: Props) {
+function Follow() {
+  const params = useParams();
   const client = useQueryClient();
   const { userID } = useGlobalCtx();
   const [query, setQuery] = React.useState("");
   const [localData, setLocalData] = React.useState<IFollow[] | undefined>();
 
   const { data, isLoading, isFetching } = useQuery(
-    [pid, type],
+    [params.pid || "me", params["0"]],
     async () => {
       const { data } = await axios.get<IJsonResponse<IFollow[]>>(
-        `/api/profile/follow/${type}/${pid}`
+        `/api/profile/follow/${params["0"]}/${params.pid}`
       );
       return data.body;
     },
     { refetchOnMount: "always" }
   );
   const folResult = useFollow((data) => {
-    client.setQueryData<IFollow[]>([pid, type], (old) =>
+    client.setQueryData<IFollow[]>([params.pid, params["0"]], (old) =>
       produce(old!, (draft) => {
         const idx = draft.findIndex(
           (f) => f.profile.id === data.pid || f.following.id === data.pid

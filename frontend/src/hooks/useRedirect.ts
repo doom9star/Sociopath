@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 export function useRedirect(redirect: boolean, to: string) {
-  const history = useHistory();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (redirect) history.push(to);
-  }, [redirect, to, history]);
+    if (redirect) navigate(to);
+  }, [redirect, to, navigate]);
 }

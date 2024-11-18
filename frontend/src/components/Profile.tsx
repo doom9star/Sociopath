@@ -1,24 +1,20 @@
-import React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGlobalCtx } from "../context";
 import { useFeed } from "../hooks/useFeed";
 import { useFollow } from "../hooks/useFollow";
 import { useProfile } from "../hooks/useProfile";
+import { getDate } from "../ts/utils";
 import BackButton from "./BackButton";
 import Button from "./custom/Button";
 import Spinner from "./custom/Spinner";
 import Post from "./Post";
-import { getDate } from "../ts/utils";
 
-function Profile({
-  match: {
-    params: { pid = "me" },
-  },
-}: RouteComponentProps<{ pid: string }>) {
+function Profile() {
+  const { pid = "me" } = useParams();
   const { userID } = useGlobalCtx();
 
-  const proResult = useProfile(pid);
-  const posResult = useFeed(pid, "private");
+  const proResult = useProfile(pid || "me");
+  const posResult = useFeed(pid || "", "private");
   const folResult = useFollow();
 
   const profile = proResult.data;
@@ -26,7 +22,6 @@ function Profile({
 
   if (proResult.isLoading || proResult.isFetching) return <Spinner />;
 
-  console.log(profile);
   return (
     <>
       {pid !== "me" && <BackButton />}

@@ -1,13 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Router from "./Router";
-import "./index.css";
-import { QueryClientProvider, QueryClient } from "react-query";
-// import { ReactQueryDevtools } from "react-query/devtools";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import ru from "javascript-time-ago/locale/ru.json";
+import ReactDOM from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "react-query";
+import App from "./App";
 import GlobalProvider from "./context";
+import "./index.css";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -22,14 +20,14 @@ const client = new QueryClient({
   },
 });
 
-ReactDOM.render(
-  <React.StrictMode>
-    <QueryClientProvider client={client}>
-      <GlobalProvider>
-        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
-        <Router />
-      </GlobalProvider>
-    </QueryClientProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+root.render(
+  <QueryClientProvider client={client}>
+    <GlobalProvider>
+      <App />
+    </GlobalProvider>
+  </QueryClientProvider>
 );

@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
 import Button from "../components/custom/Button";
 import { axios } from "../ts/constants";
@@ -15,7 +15,7 @@ function New() {
   }>({});
   const [uploading, setUploading] = React.useState(false);
   const client = useQueryClient();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const newResult = useMutation(
     "newPost",
@@ -46,7 +46,7 @@ function New() {
             { ...body, profile },
             ...old,
           ]);
-        history.push("/home/feed");
+        navigate("/home/feed");
       },
     }
   );

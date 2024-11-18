@@ -1,8 +1,8 @@
+import { AxiosResponse } from "axios";
+import { produce } from "immer";
 import { useMutation, UseMutationResult, useQueryClient } from "react-query";
 import { axios } from "../ts/constants";
 import { IJsonResponse, IPost, WorldPostType } from "../ts/types";
-import produce from "immer";
-import { AxiosResponse } from "axios";
 
 interface IVariables {
   value: 1 | -1;

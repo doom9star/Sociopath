@@ -1,6 +1,7 @@
 import React from "react";
 
 type Props = {
+  children: any;
   onClick: () => void;
 };
 

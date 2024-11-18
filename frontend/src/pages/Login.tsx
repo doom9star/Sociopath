@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import React from "react";
 import { useQueryClient } from "react-query";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from "../components/custom/Alert";
 import Button from "../components/custom/Button";
 import Input from "../components/custom/Input";
@@ -17,9 +17,10 @@ interface LoginAttribs {
   password: string;
 }
 
-function Login({ history }: RouteComponentProps) {
+function Login() {
   useTitle("Login");
 
+  const navigate = useNavigate();
   const client = useQueryClient();
   const { setUserID } = useGlobalCtx();
   const [attribs, setAttribs] = React.useState<LoginAttribs>({
@@ -51,7 +52,7 @@ function Login({ history }: RouteComponentProps) {
       if (data.status === 200) {
         client.setQueryData(["me", "profile"], () => data.body);
         setUserID(data.body.id);
-        history.replace("/home/feed");
+        navigate("/home/feed");
         return;
       } else if (data.status === 401)
         setServerError("Wrong Password! Try again!");

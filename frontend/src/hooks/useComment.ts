@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import produce from "immer";
+import { produce } from "immer";
 import { useMutation, UseMutationResult, useQueryClient } from "react-query";
 import { axios } from "../ts/constants";
 import { IComment, IJsonResponse, IPost } from "../ts/types";

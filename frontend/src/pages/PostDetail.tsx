@@ -1,31 +1,26 @@
+import { produce } from "immer";
 import React from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { RouteComponentProps } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import Comment from "../components/Comment";
 import Button from "../components/custom/Button";
 import Spinner from "../components/custom/Spinner";
 import Post from "../components/Post";
+import { useGlobalCtx } from "../context";
 import { useComment } from "../hooks/useComment";
 import { axios } from "../ts/constants";
 import { IComment, IJsonResponse, IPost } from "../ts/types";
-import produce from "immer";
-import { useGlobalCtx } from "../context";
-import BackButton from "../components/BackButton";
 
-type Props = RouteComponentProps<{ postId: string }, {}>;
-
-function PostDetail({
-  match: {
-    params: { postId },
-  },
-}: Props) {
+function PostDetail() {
+  const params = useParams();
   const client = useQueryClient();
   const { userID } = useGlobalCtx();
   const { isLoading, isFetching, data } = useQuery(
-    [postId, "detail"],
+    [params.postId, "detail"],
     async () => {
       const { data } = await axios.get<IJsonResponse<IPost>>(
-        "/api/post/" + postId
+        "/api/post/" + params.postId
       );
       return data.body;
     },

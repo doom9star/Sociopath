@@ -1,6 +1,5 @@
 module.exports = {
-  purge: [],
-  darkMode: false,
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       keyframes: {
@@ -19,8 +18,8 @@ module.exports = {
       },
     },
   },
-  variants: {
-    extend: {},
-  },
   plugins: [],
+  corePlugins: {
+    preflight: false,
+  },
 };

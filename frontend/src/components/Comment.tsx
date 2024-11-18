@@ -4,7 +4,7 @@ import { useComment } from "../hooks/useComment";
 import { useQueryData } from "../hooks/useQueryData";
 import { IComment, IPost, IProfile } from "../ts/types";
 import Button from "./custom/Button";
-import produce from "immer";
+import { produce } from "immer";
 import ReactTimeAgo from "react-time-ago";
 import { Link } from "react-router-dom";
 

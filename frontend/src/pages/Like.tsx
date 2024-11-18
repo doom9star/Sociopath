@@ -1,7 +1,7 @@
-import produce from "immer";
+import { produce } from "immer";
 import React from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import Button from "../components/custom/Button";
 import Input from "../components/custom/Input";
@@ -11,23 +11,18 @@ import { useFollow } from "../hooks/useFollow";
 import { axios } from "../ts/constants";
 import { IJsonResponse, ILike } from "../ts/types";
 
-type Props = RouteComponentProps<{ postId: string }, {}>;
-
-function Like({
-  match: {
-    params: { postId },
-  },
-}: Props) {
-  const { userID } = useGlobalCtx();
+function Like() {
+  const params = useParams();
   const client = useQueryClient();
+  const { userID } = useGlobalCtx();
   const [query, setQuery] = React.useState("");
   const [localData, setLocalData] = React.useState<ILike[] | undefined>();
 
   const { data, isLoading, isFetching } = useQuery(
-    [postId, "likes"],
+    [params.postId, "likes"],
     async () => {
       const { data } = await axios.get<IJsonResponse<ILike[]>>(
-        `/api/post/likes/${postId}`
+        `/api/post/likes/${params.postId}`
       );
       return data.body;
     },
@@ -35,7 +30,7 @@ function Like({
   );
 
   const folResult = useFollow((data) => {
-    client.setQueryData<ILike[]>([postId, "likes"], (old) =>
+    client.setQueryData<ILike[]>([params.postId, "likes"], (old) =>
       produce(old!, (draft) => {
         const idx = draft.findIndex((f) => f.profile.id === data.pid);
         draft[idx].isFollowing = data.value === 1 ? true : false;

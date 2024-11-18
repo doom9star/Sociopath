@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import produce from "immer";
+import { produce } from "immer";
 import React from "react";
 import { useQueryClient } from "react-query";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 import { useGlobalCtx } from "../context";
 import { useLike } from "../hooks/useLike";
@@ -17,7 +17,7 @@ interface Props {
 }
 
 function Post({ post, showDetailOnClick = true, postedBy }: Props) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const client = useQueryClient();
   const { userID } = useGlobalCtx();
   const { showDeletePost } = useModalFuncs();
@@ -49,7 +49,7 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
       }
       onClick={() => {
         if (showDetailOnClick) {
-          history.push(`/home/post/${post.id}`);
+          navigate(`/home/post/${post.id}`);
           document.body.scrollTo({ top: 200, behavior: "smooth" });
         }
       }}
@@ -162,7 +162,7 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
               className="hover:underline text-xs"
               onClick={(e) => {
                 e.stopPropagation();
-                history.push(`/home/post/${post.id}/likes`);
+                navigate(`/home/post/${post.id}/likes`);
               }}
             >
               {post.likes} {post.likes > 1 ? "likes" : "like"}

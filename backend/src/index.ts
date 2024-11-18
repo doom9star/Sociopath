@@ -1,18 +1,22 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
-import express from "express";
-import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import http from "http";
+import path from "path";
+import "reflect-metadata";
 import SocketIO from "socket.io";
+import { createConnection } from "typeorm";
 
-import { Utils } from "./ts/utils";
+import { IORouter } from "./io";
 import MainRouter from "./routes";
 import { IOAuthenticate } from "./ts/middlewares";
-import { IORouter } from "./io";
+import { Utils } from "./ts/utils";
 
-(async (): Promise<void> => {
+dotenv.config({ path: path.resolve(__dirname, "./.env") });
+
+const main = async () => {
   await createConnection();
   const app = express();
 
@@ -31,4 +35,6 @@ import { IORouter } from "./io";
   httpServer.listen(process.env.PORT, () => {
     Utils.log(`Server started at port ${process.env.PORT}`, "INFO");
   });
-})()
+};
+
+main();

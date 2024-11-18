@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGlobalCtx } from "../context";
 import { axios } from "../ts/constants";
 import { IJsonResponse, IPost } from "../ts/types";
@@ -20,7 +20,7 @@ interface Props {
 
 export default function ModalsProvider({ children }: Props) {
   const client = useQueryClient();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { setUserID } = useGlobalCtx();
   const [loading, setLoading] = React.useState(false);
 
@@ -32,11 +32,11 @@ export default function ModalsProvider({ children }: Props) {
       setLogoutActive(false);
       client.removeQueries(["me", "profile"]);
       setUserID(null);
-      history.push("/");
+      navigate("/");
       return;
     }
     setLoading(false);
-  }, [history, client, setUserID]);
+  }, [navigate, client, setUserID]);
 
   const [isDeletePostActive, setDeletePostActive] = React.useState(false);
   const [deletePostID, setDeletePostID] = React.useState("");
@@ -65,8 +65,7 @@ export default function ModalsProvider({ children }: Props) {
             privateData.filter((p) => p.id !== deletePostID)
           );
         if (postData) client.removeQueries(deletePostID);
-        if (window.location.href.includes(deletePostID))
-          history.push("/home/feed");
+        if (window.location.href.includes(deletePostID)) navigate("/home/feed");
         setLoading(false);
       },
     }

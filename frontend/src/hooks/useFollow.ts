@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult, useQueryClient } from "react-query";
 import { axios } from "../ts/constants";
 import { IJsonResponse, IProfile } from "../ts/types";
-import produce from "immer";
+import { produce } from "immer";
 
 interface IVariables {
   value: 1 | -1;
