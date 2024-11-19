@@ -1,9 +1,11 @@
+import { Button } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import { AxiosResponse } from "axios";
 import React from "react";
+import { FaUpload } from "react-icons/fa6";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
-import Button from "../components/custom/Button";
 import { axios } from "../ts/constants";
 import { IJsonResponse, IPost } from "../ts/types";
 
@@ -92,10 +94,6 @@ function New() {
       className="flex flex-col items-center justify-center w-full lg:w-1/2 mx-auto"
       style={{ height: "80vh" }}
     >
-      <span className="text-gray-500 font-bold text-center">
-        “Happiness quite unshared can scarcely be called happiness; it has no
-        taste.”
-      </span>
       <input
         type="file"
         hidden
@@ -103,23 +101,21 @@ function New() {
         ref={inputFileRef}
         onChange={handleSelect}
       />
-      <textarea
-        autoFocus
-        placeholder="Write some body..."
-        className="border border-gray-200 w-full h-1/4 p-4 focus:outline-none text-gray-600 mt-10"
+      <TextArea
+        rows={10}
+        placeholder="Write something..."
         value={body}
         onChange={(e) => setBody(e.target.value)}
-      ></textarea>
+      />
       <div className="mt-5 self-start flex">
         <div className="w-40">
           <Button
-            label="Upload"
-            styles="border border-purple-600 text-purple-500 hover:opacity-70"
-            icon={<i className="fas fa-image mr-2"></i>}
             loading={uploading}
-            buttonProps={{ onClick: () => inputFileRef.current!.click() }}
-            spinnerStyle="border-purple-500"
-          />
+            icon={<FaUpload />}
+            onClick={() => inputFileRef.current!.click()}
+          >
+            Upload
+          </Button>
         </div>
         <div className="ml-4 flex flex-wrap">
           {Object.entries(images).map(([id, { uri }]) => (
@@ -141,12 +137,12 @@ function New() {
       </div>
       <div className="self-end mt-10">
         <Button
-          label="Post"
-          styles="bg-purple-700 text-gray-100"
-          icon={<i className="fas fa-cloud mr-2"></i>}
-          buttonProps={{ onClick: () => newResult.mutate() }}
+          type="primary"
+          onClick={() => newResult.mutate()}
           loading={newResult.isLoading}
-        />
+        >
+          Post
+        </Button>
       </div>
     </div>
   );

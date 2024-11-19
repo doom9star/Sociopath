@@ -25,11 +25,11 @@ function HomeRouter() {
       <div className="flex flex-col px-4 w-full mx-auto md:w-3/4 relative mt-14">
         <Routes>
           <Route path={`feed`} element={<Feed />} />
-          <Route path={`feed/new`} element={<New />} />
-          <Route path={`world/`} element={<World />} />
+          <Route path={`new-post`} element={<New />} />
+          <Route path={`explore/`} element={<World />} />
           <Route path={`chat`} element={<Chat />} />
           <Route path={`profile`} element={<Profile />} />
-          <Route path={`profile/edit`} element={<Edit />} />
+          <Route path={`edit-profile`} element={<Edit />} />
           <Route path={`profile/(followers|following)`} element={<Follow />} />
           <Route path={`post/:postId`} element={<PostDetail />} />
           <Route path={`post/:postId/likes`} element={<Like />} />

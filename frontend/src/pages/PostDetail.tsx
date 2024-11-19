@@ -1,10 +1,11 @@
+import { Button } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import { produce } from "immer";
 import React from "react";
+import { FaArrowLeft } from "react-icons/fa6";
 import { useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
-import BackButton from "../components/BackButton";
+import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../components/Comment";
-import Button from "../components/custom/Button";
 import Spinner from "../components/custom/Spinner";
 import Post from "../components/Post";
 import { useGlobalCtx } from "../context";
@@ -14,6 +15,7 @@ import { IComment, IJsonResponse, IPost } from "../ts/types";
 
 function PostDetail() {
   const params = useParams();
+  const navigate = useNavigate();
   const client = useQueryClient();
   const { userID } = useGlobalCtx();
   const { isLoading, isFetching, data } = useQuery(
@@ -46,29 +48,29 @@ function PostDetail() {
   if (data)
     return (
       <React.Fragment>
-        <BackButton />
+        <Button
+          icon={<FaArrowLeft />}
+          onClick={() => navigate(-1)}
+          className="mb-4"
+        />
         <Post post={data} showDetailOnClick={false} />
         <div className="mb-4">
-          <textarea
+          <TextArea
+            rows={5}
             placeholder="Write a comment..."
-            className="p-4 mb-2 w-full outline-none border-2 text-sm text-gray-700"
-            style={{ fontFamily: "Josefin Sons" }}
-            autoFocus={true}
             value={commentBody}
             onChange={(e) => setCommentBody(e.target.value)}
-          ></textarea>
-          <div className="w-24 ml-auto">
+          />
+          <div className="flex justify-end my-2">
             <Button
-              label="Post"
-              icon={<i className="fas fa-envelope mr-2" />}
-              styles="bg-purple-500 text-gray-100 hover:bg-purple-700"
               loading={commentResult.isLoading}
-              buttonProps={{
-                onClick: () =>
-                  commentResult.mutate({ postId: data.id, body: commentBody }),
-                disabled: commentBody.trim() === "",
-              }}
-            />
+              onClick={() =>
+                commentResult.mutate({ postId: data.id, body: commentBody })
+              }
+              disabled={commentBody.trim() === ""}
+            >
+              Post
+            </Button>
           </div>
           {(data.comments as IComment[]).map((c) => (
             <Comment comment={c} key={c.id} post={data} />

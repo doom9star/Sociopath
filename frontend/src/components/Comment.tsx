@@ -1,12 +1,13 @@
+import { Button } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { produce } from "immer";
 import React from "react";
 import { useQueryClient } from "react-query";
+import { Link } from "react-router-dom";
+import ReactTimeAgo from "react-time-ago";
 import { useComment } from "../hooks/useComment";
 import { useQueryData } from "../hooks/useQueryData";
 import { IComment, IPost, IProfile } from "../ts/types";
-import Button from "./custom/Button";
-import { produce } from "immer";
-import ReactTimeAgo from "react-time-ago";
-import { Link } from "react-router-dom";
 
 interface CommentProps {
   comment: IComment;
@@ -37,20 +38,20 @@ export default function Comment({ comment, post, isReply }: CommentProps) {
   });
 
   return (
-    <div className="flex mt-8">
+    <div className="flex my-8">
       <div
-        className="rounded-full border-2 border-gray-300 p-1"
-        style={{ width: "4rem", height: "4rem", minWidth: "4rem" }}
+        className="rounded-full border-2 border-gray-200"
+        style={{ padding: "2px" }}
       >
         <img
-          src={poster.avatar ? poster.avatar.url : "/noImg.jpg"}
+          src={poster?.avatar ? poster?.avatar.url : "/noImg.jpg"}
           alt="profileImage"
-          className="rounded-full object-cover w-full h-full"
+          className="w-10 h-10 rounded-full"
         />
       </div>
-      <div className="flex flex-col ml-4 w-full">
+      <div className="flex flex-col ml-2 w-full">
         <div className="flex items-center justify-between">
-          <span className="ml-2 text-gray-600 text-xs md:text-sm lg:text-lg font-bold">
+          <span className="ml-2 text-sm">
             <i className="text-gray-400">@</i>
             <Link
               to={
@@ -58,72 +59,51 @@ export default function Comment({ comment, post, isReply }: CommentProps) {
                   ? "/home/profile"
                   : "/home/user/" + poster?.id
               }
-              className="hover:underline"
+              className="no-underline hover:underline text-gray-600"
             >
               {poster?.name}
             </Link>
           </span>
-          <p className="text-gray-400 font-bold text-xs">
+          <p className="text-gray-400 text-xs">
             <ReactTimeAgo date={new Date(comment.createdAt)} locale={"en-us"} />
           </p>
         </div>
-        <span className="text-gray-500 text-sm m-4">{comment.body}</span>
+        <span className="text-gray-500 text-sm m-3">{comment.body}</span>
         {showReply ? (
           <>
-            <textarea
+            <TextArea
+              rows={3}
               placeholder="Write a reply..."
-              className="p-4 my-2 w-full outline-none border-2 text-xs text-gray-700"
-              style={{ fontFamily: "cursive" }}
-              autoFocus={true}
               value={replyBody}
               onChange={(e) => setReplyBody(e.target.value)}
-            ></textarea>
-            <div className="flex">
-              <div className="w-24">
-                <Button
-                  label="Post"
-                  styles="border border-purple-500 text-purple-500 hover:opacity-80"
-                  loading={replyResult.isLoading}
-                  spinnerStyle="border-purple-800 left-0"
-                  icon={<i className="fas fa-paper-plane mr-2" />}
-                  buttonProps={{
-                    onClick: () =>
-                      replyResult.mutate({
-                        postId: post.id,
-                        body: replyBody,
-                        pcid: comment.id,
-                      }),
-                  }}
-                />
-              </div>
-              <div className="w-24">
-                <Button
-                  icon={<i className="fas fa-times mr-2" />}
-                  label="Cancel"
-                  styles="border border-red-500 text-red-500 hover:opacity-80 ml-2"
-                  buttonProps={{
-                    onClick: () => setShowReply(false),
-                  }}
-                />
-              </div>
+            />
+            <div className="flex mt-2">
+              <Button
+                loading={replyResult.isLoading}
+                onClick={() =>
+                  replyResult.mutate({
+                    postId: post.id,
+                    body: replyBody,
+                    pcid: comment.id,
+                  })
+                }
+              >
+                Post
+              </Button>
+              <Button className="ml-4" onClick={() => setShowReply(false)}>
+                Cancel
+              </Button>
             </div>
           </>
         ) : (
           <div className="flex mt-4">
             {!isReply && (
               <div className="w-24">
-                <Button
-                  icon={<i className="fas fa-comment-dots mr-2" />}
-                  label="Reply"
-                  styles="border border-purple-500 text-purple-500 hover:opacity-80"
-                  buttonProps={{
-                    onClick: () => setShowReply(true),
-                  }}
-                />
+                <Button onClick={() => setShowReply(true)}>Reply</Button>
               </div>
             )}
             {!isReply && comment.children?.length > 0 && (
-              <div className="ml-10">
+              <div>
                 <Button
                   icon={
                     <i
@@ -132,12 +112,10 @@ export default function Comment({ comment, post, isReply }: CommentProps) {
                       } mr-2`}
                     />
                   }
-                  label={`${comment.children?.length || 0} replies`}
-                  styles="text-gray-400 hover:opacity-80"
-                  buttonProps={{
-                    onClick: () => setShowReplies(!showReplies),
-                  }}
-                />
+                  onClick={() => setShowReplies(!showReplies)}
+                >
+                  {`${comment.children?.length || 0} replies`}
+                </Button>
               </div>
             )}
           </div>

@@ -1,6 +1,8 @@
+import { Button } from "antd";
 import classNames from "classnames";
 import { produce } from "immer";
 import React from "react";
+import { MdDeleteOutline } from "react-icons/md";
 import { useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
@@ -23,7 +25,6 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
   const { showDeletePost } = useModalFuncs();
 
   const [isHovering, setIsHovering] = React.useState(false);
-  const [showOptionsBar, setShowOptionsBar] = React.useState(false);
 
   const profile = useQueryData<IProfile>(["me", "profile"]);
   const poster = post.profile ? post.profile : postedBy;
@@ -42,7 +43,7 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
   return (
     <div
       className={
-        `flex flex-col mb-10 border border-gray-200 relative` +
+        `flex flex-col mb-10 border border-solid rounded-lg border-gray-200 relative` +
         classNames({
           " cursor-pointer": showDetailOnClick,
         })
@@ -62,10 +63,10 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
           <img
             src={poster?.avatar ? poster?.avatar.url : "/noImg.jpg"}
             alt="profileImage"
-            className="md:w-14 w-10 h-10 md:h-14 rounded-full"
+            className="w-10 h-10 rounded-full"
           />
         </div>
-        <span className="ml-2 text-gray-600 text-xs md:text-sm lg:text-lg font-bold">
+        <span className="ml-2 text-xs">
           <i className="text-gray-400">@</i>
           <Link
             to={
@@ -73,47 +74,24 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
                 ? "/home/profile"
                 : "/home/user/" + poster?.id
             }
-            className="hover:underline"
+            className="text-gray-600 no-underline hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             {poster?.name}
           </Link>
         </span>
-        <i
-          className="fas fa-ellipsis-v ml-auto text-purple-500 cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowOptionsBar(!showOptionsBar);
-          }}
-        />
-        {showOptionsBar && (
-          <div
-            className="border border-gray-200 absolute text-xs right-6 top-14 font-semibold"
-            style={{ fontFamily: "Josefin Sons" }}
-          >
-            {poster?.id === profile?.id && (
-              <div
-                className="py-2 px-6 cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setShowOptionsBar(false);
-                  showDeletePost(post.id);
-                }}
-              >
-                <i className="far fa-trash-alt mr-2 text-red-400"></i>
-                <span className="text-gray-500">Delete</span>
-              </div>
-            )}
-            {poster?.id !== profile?.id && (
-              <div className="py-2 px-6 cursor-pointer hover:bg-gray-100">
-                <i className="fas fa-flag mr-2 text-yellow-500"></i>
-                <span className="text-gray-500">Report</span>
-              </div>
-            )}
-          </div>
+        {poster?.id === profile?.id && (
+          <Button
+            className="ml-auto"
+            icon={<MdDeleteOutline />}
+            onClick={() => {
+              showDeletePost(post.id);
+            }}
+          />
         )}
       </div>
       {post.body && (
-        <div className="mx-10 my-2">
+        <div className="mx-10 my-4">
           <span className="text-gray-600 text-sm break-words whitespace-pre-wrap">
             {post.body}
           </span>
@@ -136,7 +114,7 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
         </div>
       )}
       <div className="flex justify-between items-center px-10 py-4">
-        <div className="font-bold">
+        <div>
           <span className="text-gray-600 mr-6 cursor-pointer">
             <i
               className={
@@ -182,8 +160,7 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
             </span>
           </span>
         </div>
-        <span className="text-gray-500 text-sm">
-          <i className="fas fa-clock"></i> &nbsp;
+        <span className="text-gray-500 text-xs">
           <ReactTimeAgo date={new Date(post.createdAt)} locale={"en-us"} />
         </span>
       </div>

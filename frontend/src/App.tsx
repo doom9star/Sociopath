@@ -9,6 +9,8 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ModalsProvider from "./components/Modals";
+import { ConfigProvider } from "antd";
+import { colors } from "./ts/constants";
 
 function App() {
   const { isFetching, isLoading, data } = useProfile("me");
@@ -22,18 +24,29 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ModalsProvider>
-        <Routes>
-          <Route index element={<Landing />} />
-          <Route path="login" element={<PublicRoute children={<Login />} />} />
-          <Route
-            path="register"
-            element={<PublicRoute children={<Register />} />}
-          />
-          <Route path="home/*" element={<HomeRouter />} />
-          <Route path="*" element={<Navigate replace to={"/"} />} />
-        </Routes>
-      </ModalsProvider>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: colors.primary,
+          },
+        }}
+      >
+        <ModalsProvider>
+          <Routes>
+            <Route index element={<Landing />} />
+            <Route
+              path="login"
+              element={<PublicRoute children={<Login />} />}
+            />
+            <Route
+              path="register"
+              element={<PublicRoute children={<Register />} />}
+            />
+            <Route path="home/*" element={<HomeRouter />} />
+            <Route path="*" element={<Navigate replace to={"/"} />} />
+          </Routes>
+        </ModalsProvider>
+      </ConfigProvider>
     </BrowserRouter>
   );
 }

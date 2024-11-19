@@ -1,5 +1,5 @@
-import React from "react";
-import Button from "../components/custom/Button";
+import { Button } from "antd";
+import { IoReloadOutline } from "react-icons/io5";
 import Spinner from "../components/custom/Spinner";
 import Post from "../components/Post";
 import { useFeed } from "../hooks/useFeed";
@@ -9,7 +9,9 @@ import { IProfile } from "../ts/types";
 function Feed() {
   const { data, isLoading, refetch, isRefetching } = useFeed("me", "protected");
   const profile = useQueryData<IProfile>(["me", "profile"]);
+
   if (isLoading) return <Spinner />;
+
   return (
     <div
       className="flex flex-col w-full relative"
@@ -19,15 +21,10 @@ function Feed() {
         <Spinner />
       ) : (
         <>
-          <div className="self-end mr-4">
-            <Button
-              label="Reload"
-              styles="text-purple-700 border mb-2 border-purple-700 hover:opacity-80"
-              icon={<i className="fas fa-redo mr-2 text-purple-600" />}
-              buttonProps={{
-                onClick: refetch,
-              }}
-            />
+          <div className="self-end mb-4">
+            <Button icon={<IoReloadOutline />} onClick={() => refetch()}>
+              Reload
+            </Button>
           </div>
           <div>
             {data?.map((post) => (

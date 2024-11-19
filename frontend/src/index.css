@@ -22,3 +22,8 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.ant-form-item-explain-error {
+  font-size: 0.6rem;
+  margin: 0.2rem 0rem 0.6rem 0rem;
+}

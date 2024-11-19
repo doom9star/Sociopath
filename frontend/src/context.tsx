@@ -18,7 +18,8 @@ const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
   const [wpt, setWPT] = React.useState<WorldPostType>(
     WorldPostType.IMAGE_WRITING
   );
-  const [activeSidebarItem, setActiveSidebarItem] = React.useState<string>("");
+  const [activeSidebarItem, setActiveSidebarItem] =
+    React.useState<string>("feed");
   return (
     <GlobalCtx.Provider
       value={{
