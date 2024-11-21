@@ -1,5 +1,5 @@
 import { Menu, MenuProps } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { BsChatDots } from "react-icons/bs";
 import { CiLogout, CiUser } from "react-icons/ci";
 import { FaRegNewspaper } from "react-icons/fa6";
@@ -8,7 +8,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoAddOutline } from "react-icons/io5";
 import { TbUserEdit } from "react-icons/tb";
 import { TiWorldOutline } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGlobalCtx } from "../context";
 import { useQueryData } from "../hooks/useQueryData";
 import { INotification } from "../ts/types";
@@ -57,6 +57,7 @@ const menu: MenuProps["items"] = [
 
 function Sidebar() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { showLogout } = useModalFuncs();
   const { activeSidebarItem, setActiveSidebarItem } = useGlobalCtx();
   const [showNotifications, setShowNotifications] = React.useState(false);
@@ -74,6 +75,10 @@ function Sidebar() {
   const hideNotifications = React.useCallback(() => {
     setShowNotifications(false);
   }, []);
+
+  useEffect(() => {
+    setActiveSidebarItem(pathname.split("/").slice(-1)[0]);
+  }, [pathname, setActiveSidebarItem]);
 
   return (
     <React.Fragment>
@@ -94,7 +99,6 @@ function Sidebar() {
             mode="inline"
             items={menu}
             onClick={(e) => {
-              setActiveSidebarItem(e.key);
               navigate(`/home/${e.key}`);
             }}
           />

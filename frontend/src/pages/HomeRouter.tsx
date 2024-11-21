@@ -6,13 +6,13 @@ import { useNotifications } from "../hooks/useNotifications";
 import { useTitle } from "../hooks/useTitle";
 import Chat from "./Chat";
 import Edit from "./Edit";
+import Explore from "./Explore";
 import Feed from "./Feed";
 import Follow from "./Follow";
 import Like from "./Like";
 import New from "./New";
 import PostDetail from "./PostDetail";
 import Settings from "./Settings";
-import World from "./World";
 
 function HomeRouter() {
   useTitle("Home");
@@ -26,16 +26,19 @@ function HomeRouter() {
         <Routes>
           <Route path={`feed`} element={<Feed />} />
           <Route path={`new-post`} element={<New />} />
-          <Route path={`explore/`} element={<World />} />
+          <Route path={`explore/`} element={<Explore />} />
           <Route path={`chat`} element={<Chat />} />
           <Route path={`profile`} element={<Profile />} />
           <Route path={`edit-profile`} element={<Edit />} />
-          <Route path={`profile/(followers|following)`} element={<Follow />} />
+          <Route
+            path={`profile/:type(followers|following)`}
+            element={<Follow />}
+          />
           <Route path={`post/:postId`} element={<PostDetail />} />
           <Route path={`post/:postId/likes`} element={<Like />} />
           <Route path={`user/:pid`} element={<Profile />} />
           <Route
-            path={`user/:pid/(followers|following)`}
+            path={`user/:pid/:type(followers|following)`}
             element={<Follow />}
           />
           <Route path={`settings`} element={<Settings />} />

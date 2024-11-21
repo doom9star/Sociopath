@@ -84,7 +84,8 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
           <Button
             className="ml-auto"
             icon={<MdDeleteOutline />}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               showDeletePost(post.id);
             }}
           />

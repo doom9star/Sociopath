@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import { CiHome } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import Logo from "../components/Logo";
 import { useGlobalCtx } from "../context";
@@ -16,7 +17,9 @@ function Landing() {
       <Logo styles="w-96" />
       {userID ? (
         <Link to="/home/feed">
-          <Button>Home</Button>
+          <Button type="primary" icon={<CiHome />}>
+            Home
+          </Button>
         </Link>
       ) : (
         <div className="flex">

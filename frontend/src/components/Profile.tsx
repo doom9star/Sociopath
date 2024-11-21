@@ -1,15 +1,15 @@
-import { Link, useParams } from "react-router-dom";
+import { Button, Spin } from "antd";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGlobalCtx } from "../context";
 import { useFeed } from "../hooks/useFeed";
 import { useFollow } from "../hooks/useFollow";
 import { useProfile } from "../hooks/useProfile";
 import { getDate } from "../ts/utils";
-import BackButton from "./BackButton";
-import Button from "./custom/Button";
-import Spinner from "./custom/Spinner";
 import Post from "./Post";
 
 function Profile() {
+  const navigate = useNavigate();
   const { pid = "me" } = useParams();
   const { userID } = useGlobalCtx();
 
@@ -20,11 +20,17 @@ function Profile() {
   const profile = proResult.data;
   const posts = posResult.data;
 
-  if (proResult.isLoading || proResult.isFetching) return <Spinner />;
+  if (proResult.isLoading || proResult.isFetching) return <Spin />;
 
   return (
     <>
-      {pid !== "me" && <BackButton />}
+      {pid !== "me" && (
+        <Button
+          icon={<FaArrowLeft />}
+          onClick={() => navigate(-1)}
+          className="mb-4"
+        />
+      )}
       <div className="pt-5 w-full">
         <div>
           <div className="flex justify-between">
@@ -54,11 +60,11 @@ function Profile() {
                 </div>
                 <Link
                   to={
-                    pid === userID
+                    [userID, "me"].includes(pid)
                       ? "/home/profile/followers"
                       : `/home/user/${pid}/followers`
                   }
-                  className="flex flex-col items-center mr-8 hover:opacity-80 cursor-pointer"
+                  className="no-underline text-gray-500 flex flex-col items-center mr-8 hover:opacity-80 cursor-pointer"
                 >
                   <span>Followers</span>
                   <span>{profile?.followers || 0}</span>
@@ -69,7 +75,7 @@ function Profile() {
                       ? "/home/profile/following"
                       : `/home/user/${pid}/following`
                   }
-                  className="flex flex-col items-center mr-8 hover:opacity-80 cursor-pointer"
+                  className="no-underline text-gray-500 flex flex-col items-center mr-8 hover:opacity-80 cursor-pointer"
                 >
                   <span>Following</span>
                   <span>{profile?.following || 0}</span>
@@ -79,32 +85,29 @@ function Profile() {
                 <div className="mt-4 mr-8">
                   {profile?.isFollowing ? (
                     <Button
-                      label="Unfollow"
-                      styles="border border-purple-700 text-purple-700 hover:opacity-80"
-                      buttonProps={{
-                        onClick: () =>
-                          folResult.mutate({ pid: profile.id, value: -1 }),
-                      }}
+                      onClick={() =>
+                        folResult.mutate({ pid: profile.id, value: -1 })
+                      }
                       loading={folResult.isLoading}
-                      spinnerStyle="border-purple-700"
-                    />
+                    >
+                      Unfollow
+                    </Button>
                   ) : (
                     <Button
-                      label="Follow"
-                      styles="bg-purple-700 text-gray-100 hover:bg-purple-700"
-                      buttonProps={{
-                        onClick: () =>
-                          folResult.mutate({ pid: profile.id, value: 1 }),
-                      }}
+                      onClick={() =>
+                        folResult.mutate({ pid: profile.id, value: 1 })
+                      }
                       loading={folResult.isLoading}
-                    />
+                    >
+                      Follow
+                    </Button>
                   )}
                 </div>
               )}
             </div>
           </div>
           <div className="flex flex-col mt-4 ml-4">
-            <div className="flex flex-col text-sm text-gray-400">
+            <div className="flex text-sm text-gray-400">
               <div className="flex items-center">
                 <i className="fas fa-calendar mr-2 text-purple-500"></i>
                 <span className="whitespace-nowrap">
@@ -112,13 +115,13 @@ function Profile() {
                 </span>
               </div>
               {profile?.location && (
-                <div className="flex mt-2 items-center">
+                <div className="flex ml-6 items-center">
                   <i className="fas fa-map-marker-alt mr-2 text-purple-500"></i>
                   <span className="whitespace-nowrap">{profile.location}</span>
                 </div>
               )}
               {profile?.occupation && (
-                <div className="flex mt-2 items-center">
+                <div className="flex ml-6 items-center">
                   <i className="fas fa-building mr-2 text-purple-500 "></i>
                   <span className="whitespace-nowrap">
                     {profile.occupation}
@@ -126,10 +129,10 @@ function Profile() {
                 </div>
               )}
               {profile?.weblink && (
-                <div className="flex mt-2 items-center">
+                <div className="flex ml-6 items-center">
                   <i className="fas fa-link mr-2 text-purple-500"></i>
                   <a
-                    href="www.google.com"
+                    href={profile.weblink}
                     className="hover:underline text-gray-400 whitespace-nowrap"
                   >
                     {profile.weblink}
@@ -139,23 +142,22 @@ function Profile() {
             </div>
             {profile?.bio && (
               <div
-                className="text-gray-500 flex flex-col items-center"
+                className="text-gray-500 flex items-center mt-3"
                 style={{
                   wordSpacing: "0.2em",
                   whiteSpace: "pre-wrap",
                 }}
               >
-                <>
-                  <i className="fas fa-fan text-purple-600 mb-2"></i>
-                  <span className="text-sm">{profile.bio}</span>
-                </>
+                <span className="text-sm">{profile.bio}</span>
               </div>
             )}
           </div>
         </div>
         <div className="relative mt-6" style={{ minHeight: "100px" }}>
           {posResult.isLoading || posResult.isFetching ? (
-            <Spinner />
+            <div className="w-full flex justify-center items-center">
+              <Spin />
+            </div>
           ) : (
             posts?.map((post) => (
               <Post post={post} key={post.id} postedBy={profile} />

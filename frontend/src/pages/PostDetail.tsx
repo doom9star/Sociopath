@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { produce } from "immer";
 import React from "react";
@@ -6,7 +6,6 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../components/Comment";
-import Spinner from "../components/custom/Spinner";
 import Post from "../components/Post";
 import { useGlobalCtx } from "../context";
 import { useComment } from "../hooks/useComment";
@@ -43,7 +42,7 @@ function PostDetail() {
       );
   });
 
-  if (isLoading || isFetching) return <Spinner />;
+  if (isLoading || isFetching) return <Spin />;
 
   if (data)
     return (

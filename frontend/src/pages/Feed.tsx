@@ -1,6 +1,5 @@
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { IoReloadOutline } from "react-icons/io5";
-import Spinner from "../components/custom/Spinner";
 import Post from "../components/Post";
 import { useFeed } from "../hooks/useFeed";
 import { useQueryData } from "../hooks/useQueryData";
@@ -10,7 +9,7 @@ function Feed() {
   const { data, isLoading, refetch, isRefetching } = useFeed("me", "protected");
   const profile = useQueryData<IProfile>(["me", "profile"]);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <Spin />;
 
   return (
     <div
@@ -18,7 +17,7 @@ function Feed() {
       style={{ minHeight: "100px" }}
     >
       {isRefetching ? (
-        <Spinner />
+        <Spin />
       ) : (
         <>
           <div className="self-end mb-4">

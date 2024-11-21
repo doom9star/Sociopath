@@ -1,35 +1,35 @@
+import { Button, Input, Spin } from "antd";
 import { produce } from "immer";
 import React from "react";
+import { CiSearch } from "react-icons/ci";
 import { useQuery, useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
-import BackButton from "../components/BackButton";
-import Button from "../components/custom/Button";
-import Input from "../components/custom/Input";
-import Spinner from "../components/custom/Spinner";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGlobalCtx } from "../context";
 import { useFollow } from "../hooks/useFollow";
 import { axios } from "../ts/constants";
 import { IFollow, IJsonResponse } from "../ts/types";
+import { FaArrowLeft } from "react-icons/fa6";
 
 function Follow() {
   const params = useParams();
+  const navigate = useNavigate();
   const client = useQueryClient();
   const { userID } = useGlobalCtx();
   const [query, setQuery] = React.useState("");
   const [localData, setLocalData] = React.useState<IFollow[] | undefined>();
 
   const { data, isLoading, isFetching } = useQuery(
-    [params.pid || "me", params["0"]],
+    [params.pid || "me", params.type],
     async () => {
       const { data } = await axios.get<IJsonResponse<IFollow[]>>(
-        `/api/profile/follow/${params["0"]}/${params.pid}`
+        `/api/profile/follow/${params.type}/${params.pid}`
       );
       return data.body;
     },
     { refetchOnMount: "always" }
   );
   const folResult = useFollow((data) => {
-    client.setQueryData<IFollow[]>([params.pid, params["0"]], (old) =>
+    client.setQueryData<IFollow[]>([params.pid, params.type], (old) =>
       produce(old!, (draft) => {
         const idx = draft.findIndex(
           (f) => f.profile.id === data.pid || f.following.id === data.pid
@@ -53,22 +53,21 @@ function Follow() {
     } else setLocalData(data);
   }, [query, data]);
 
-  if (isLoading || isFetching) return <Spinner />;
+  if (isLoading || isFetching) return <Spin />;
 
   return (
     <React.Fragment>
-      <BackButton />
+      <Button
+        icon={<FaArrowLeft />}
+        onClick={() => navigate(-1)}
+        className="mb-4"
+      />
       <div className="w-full mx-auto md:w-1/2">
         <Input
-          icon="fas fa-search"
-          inputProps={{
-            type: "text",
-            name: "query",
-            value: query,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-              setQuery(e.target.value),
-            autoFocus: true,
-          }}
+          autoFocus
+          prefix={<CiSearch />}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
         {localData?.map((f) => {
           const user = f.profile ? f.profile : f.following;
@@ -95,26 +94,22 @@ function Follow() {
                 <div>
                   {f.isFollowing || f.isFollowing === undefined ? (
                     <Button
-                      label="Unfollow"
-                      styles="border border-purple-700 text-purple-700 hover:opacity-70"
-                      buttonProps={{
-                        onClick: () =>
-                          folResult.mutate({ pid: user.id, value: -1 }),
-                      }}
+                      onClick={() =>
+                        folResult.mutate({ pid: user.id, value: -1 })
+                      }
                       loading={folResult.isLoading}
-                      spinnerStyle="border-purple-700"
-                    />
+                    >
+                      Unfollow
+                    </Button>
                   ) : (
                     <Button
-                      label="Follow"
-                      styles="bg-purple-700 text-gray-100 hover:bg-purple-700 hover:opacity-70"
-                      buttonProps={{
-                        onClick: () =>
-                          folResult.mutate({ pid: user.id, value: 1 }),
-                      }}
+                      onClick={() =>
+                        folResult.mutate({ pid: user.id, value: 1 })
+                      }
                       loading={folResult.isLoading}
-                      spinnerStyle="border-purple-700"
-                    />
+                    >
+                      Follow
+                    </Button>
                   )}
                 </div>
               )}

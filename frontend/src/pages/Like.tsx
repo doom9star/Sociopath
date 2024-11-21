@@ -1,11 +1,10 @@
+import { Button, Input, Spin } from "antd";
 import { produce } from "immer";
 import React from "react";
+import { CiSearch } from "react-icons/ci";
+import { FaArrowLeft } from "react-icons/fa6";
 import { useQuery, useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
-import BackButton from "../components/BackButton";
-import Button from "../components/custom/Button";
-import Input from "../components/custom/Input";
-import Spinner from "../components/custom/Spinner";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGlobalCtx } from "../context";
 import { useFollow } from "../hooks/useFollow";
 import { axios } from "../ts/constants";
@@ -13,6 +12,7 @@ import { IJsonResponse, ILike } from "../ts/types";
 
 function Like() {
   const params = useParams();
+  const navigate = useNavigate();
   const client = useQueryClient();
   const { userID } = useGlobalCtx();
   const [query, setQuery] = React.useState("");
@@ -49,22 +49,20 @@ function Like() {
     } else setLocalData(data);
   }, [query, data]);
 
-  if (isLoading || isFetching) return <Spinner />;
+  if (isLoading || isFetching) return <Spin />;
 
   return (
     <React.Fragment>
-      <BackButton />
+      <Button
+        icon={<FaArrowLeft />}
+        onClick={() => navigate(-1)}
+        className="mb-4"
+      />
       <div className="w-full mx-auto md:w-1/2">
         <Input
-          icon="fas fa-search"
-          inputProps={{
-            type: "text",
-            name: "query",
-            value: query,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-              setQuery(e.target.value),
-            autoFocus: true,
-          }}
+          prefix={<CiSearch />}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
         {localData?.map((l) => {
           return (
@@ -92,26 +90,22 @@ function Like() {
                 <div>
                   {l.isFollowing ? (
                     <Button
-                      label="Unfollow"
-                      styles="border border-purple-700 text-purple-700 hover:opacity-70"
-                      buttonProps={{
-                        onClick: () =>
-                          folResult.mutate({ pid: l.profile.id, value: -1 }),
-                      }}
+                      onClick={() =>
+                        folResult.mutate({ pid: l.profile.id, value: -1 })
+                      }
                       loading={folResult.isLoading}
-                      spinnerStyle="border-purple-700"
-                    />
+                    >
+                      Unfollow
+                    </Button>
                   ) : (
                     <Button
-                      label="Follow"
-                      styles="bg-purple-700 text-gray-100 hover:bg-purple-700 hover:opacity-70"
-                      buttonProps={{
-                        onClick: () =>
-                          folResult.mutate({ pid: l.profile.id, value: 1 }),
-                      }}
+                      onClick={() =>
+                        folResult.mutate({ pid: l.profile.id, value: 1 })
+                      }
                       loading={folResult.isLoading}
-                      spinnerStyle="border-purple-700"
-                    />
+                    >
+                      Follow
+                    </Button>
                   )}
                 </div>
               )}

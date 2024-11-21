@@ -1,4 +1,3 @@
-import { v2 } from "cloudinary";
 import { Router } from "express";
 
 import ProfileRouter from "./profile";

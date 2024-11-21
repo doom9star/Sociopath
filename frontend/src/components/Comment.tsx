@@ -17,7 +17,7 @@ interface CommentProps {
 
 export default function Comment({ comment, post, isReply }: CommentProps) {
   const profile = useQueryData<IProfile>(["me", "profile"]);
-  const poster = comment.profile.id === profile?.id ? profile : comment.profile;
+  const poster = comment.profile;
   const client = useQueryClient();
 
   const [showReply, setShowReply] = React.useState(false);

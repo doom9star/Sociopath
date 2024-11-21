@@ -2,12 +2,12 @@ import { Response, Router } from "express";
 import { getConnection } from "typeorm";
 import Follow from "../../entity/Follow";
 import { Image } from "../../entity/Image";
+import Notification from "../../entity/Notification";
 import { Profile } from "../../entity/Profile";
+import { sMgr } from "../../ts/constants";
 import { authenticate, cloudinary } from "../../ts/middlewares";
 import { AuthRequest, NotificationType } from "../../ts/types";
 import { Utils } from "../../ts/utils";
-import { sMgr } from "../../ts/constants";
-import Notification from "../../entity/Notification";
 
 const router = Router();
 
@@ -39,7 +39,6 @@ router.put(
 
       await Profile.update({ id: req.user.pid }, { ...values });
 
-      await getConnection().queryResultCache.remove([req.user.pid]);
       return res.json(Utils.getResponse(200));
     } catch (error) {
       console.log(error);
@@ -56,7 +55,6 @@ router.get(
       const profile = await Profile.createQueryBuilder("profile")
         .leftJoinAndSelect("profile.avatar", "avatar")
         .where("profile.id = :id", { id: pid })
-        .cache(pid, 1000 * 60 * 60 * 24 * 7)
         .getOne();
       if (pid !== req.user.pid) {
         const follow = await Follow.findOne({
@@ -112,7 +110,6 @@ router.put(
       if (s) s.emit("unfollow");
     }
 
-    await conn.queryResultCache.remove([req.user.pid, pid]);
     return res.json(Utils.getResponse(200, { value, pid }));
   }
 );
