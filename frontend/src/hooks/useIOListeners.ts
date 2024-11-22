@@ -1,7 +1,7 @@
 import { produce } from "immer";
 import React from "react";
 import { useQueryClient } from "react-query";
-import socket from "../socket";
+import { socket } from "../socket";
 import { INotification, IProfile, NotificationType } from "../ts/types";
 
 export function useIOListeners() {
@@ -34,5 +34,5 @@ export function useIOListeners() {
         })
       );
     });
-  }, [client]);
+  }, [client, socket]);
 }

@@ -1,6 +1,5 @@
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import ru from "javascript-time-ago/locale/ru.json";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
@@ -8,7 +7,6 @@ import GlobalProvider from "./context";
 import "./index.css";
 
 TimeAgo.addDefaultLocale(en);
-TimeAgo.addLocale(ru);
 
 const client = new QueryClient({
   defaultOptions: {

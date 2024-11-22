@@ -16,26 +16,24 @@ function Feed() {
       className="flex flex-col w-full relative"
       style={{ minHeight: "100px" }}
     >
-      {isRefetching ? (
-        <Spin />
-      ) : (
-        <>
-          <div className="self-end mb-4">
-            <Button icon={<IoReloadOutline />} onClick={() => refetch()}>
-              Reload
-            </Button>
-          </div>
-          <div>
-            {data?.map((post) => (
-              <Post
-                post={post}
-                key={post.id}
-                postedBy={!post.profile ? profile : undefined}
-              />
-            ))}
-          </div>
-        </>
-      )}
+      <div className="self-end mb-4">
+        <Button
+          icon={<IoReloadOutline />}
+          onClick={() => refetch()}
+          loading={isRefetching}
+        >
+          Reload
+        </Button>
+      </div>
+      <div>
+        {data?.map((post) => (
+          <Post
+            post={post}
+            key={post.id}
+            postedBy={!post.profile ? profile : undefined}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -23,6 +23,10 @@ body {
   display: none;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
 .ant-form-item-explain-error {
   font-size: 0.6rem;
   margin: 0.2rem 0rem 0.6rem 0rem;

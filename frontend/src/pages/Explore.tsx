@@ -1,6 +1,6 @@
 import { Button, Spin, Tabs, TabsProps } from "antd";
 import React from "react";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaImages } from "react-icons/fa6";
 import Post from "../components/Post";
 import Search from "../components/Search";
 import { useGlobalCtx } from "../context";
@@ -55,7 +55,7 @@ function World() {
               <img
                 src={p.images.length > 0 ? p.images[0].url : "/noImg.jpg"}
                 alt={p.id}
-                className="object-contain cursor-pointer hover:opacity-70 transition-all"
+                className="w-full object-contain cursor-pointer hover:opacity-70 transition-all"
                 onClick={() => {
                   if (p.id !== data[0].id) {
                     const filtered = localData?.filter((lp) => lp.id !== p.id);
@@ -66,7 +66,7 @@ function World() {
                 }}
               />
               {p.images.length > 1 && (
-                <i className="fas fa-clone text-gray-500 px-1 bg-white text-lg absolute top-2 right-2" />
+                <FaImages className="text-white absolute top-2 right-2" />
               )}
             </div>
           ))}
@@ -74,7 +74,7 @@ function World() {
       ) : (
         <div className="my-8">
           {wpt !== WorldPostType.WRITING && (
-            <div className="w-10 ml-auto">
+            <div className="w-10 mb-4">
               <Button
                 icon={<FaArrowLeft />}
                 onClick={() => {

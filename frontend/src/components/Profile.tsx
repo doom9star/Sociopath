@@ -47,13 +47,34 @@ function Profile() {
                   <i className="text-gray-400">@</i>
                   {profile?.name}
                 </span>
+                {profile?.isFollowing !== undefined && (
+                  <div className="mt-2">
+                    {profile?.isFollowing ? (
+                      <Button
+                        onClick={() =>
+                          folResult.mutate({ pid: profile.id, value: -1 })
+                        }
+                        loading={folResult.isLoading}
+                      >
+                        Unfollow
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        onClick={() =>
+                          folResult.mutate({ pid: profile.id, value: 1 })
+                        }
+                        loading={folResult.isLoading}
+                      >
+                        Follow
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex flex-col justify-center">
-              <div
-                className="flex items-center pr-2 text-gray-500 text-xs md:text-sm lg:text-lg"
-                style={{ fontFamily: "monospace" }}
-              >
+              <div className="font-serif flex items-center pr-2 text-gray-500 text-xs md:text-sm lg:text-lg">
                 <div className="flex flex-col items-center mr-8">
                   <span>Posts</span>
                   <span>{posts?.length}</span>
@@ -71,7 +92,7 @@ function Profile() {
                 </Link>
                 <Link
                   to={
-                    pid === userID
+                    [userID, "me"].includes(pid)
                       ? "/home/profile/following"
                       : `/home/user/${pid}/following`
                   }
@@ -81,29 +102,6 @@ function Profile() {
                   <span>{profile?.following || 0}</span>
                 </Link>
               </div>
-              {profile?.isFollowing !== undefined && (
-                <div className="mt-4 mr-8">
-                  {profile?.isFollowing ? (
-                    <Button
-                      onClick={() =>
-                        folResult.mutate({ pid: profile.id, value: -1 })
-                      }
-                      loading={folResult.isLoading}
-                    >
-                      Unfollow
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() =>
-                        folResult.mutate({ pid: profile.id, value: 1 })
-                      }
-                      loading={folResult.isLoading}
-                    >
-                      Follow
-                    </Button>
-                  )}
-                </div>
-              )}
             </div>
           </div>
           <div className="flex flex-col mt-4 ml-4">

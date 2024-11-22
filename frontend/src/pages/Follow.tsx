@@ -22,14 +22,14 @@ function Follow() {
     [params.pid || "me", params.type],
     async () => {
       const { data } = await axios.get<IJsonResponse<IFollow[]>>(
-        `/api/profile/follow/${params.type}/${params.pid}`
+        `/api/profile/follow/${params.type}/${params.pid || "me"}`
       );
       return data.body;
     },
     { refetchOnMount: "always" }
   );
   const folResult = useFollow((data) => {
-    client.setQueryData<IFollow[]>([params.pid, params.type], (old) =>
+    client.setQueryData<IFollow[]>([params.pid || "me", params.type], (old) =>
       produce(old!, (draft) => {
         const idx = draft.findIndex(
           (f) => f.profile.id === data.pid || f.following.id === data.pid
@@ -65,6 +65,7 @@ function Follow() {
       <div className="w-full mx-auto md:w-1/2">
         <Input
           autoFocus
+          className="mb-4"
           prefix={<CiSearch />}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -77,7 +78,7 @@ function Follow() {
                 to={
                   user.id === userID ? "/home/profile" : `/home/user/${user.id}`
                 }
-                className="w-3/4 flex items-center p-2 cursor-pointer hover:underline"
+                className="no-underline w-3/4 flex items-center p-2 cursor-pointer hover:underline"
               >
                 <div className="border border-gray-200 rounded-full p-1">
                   <img
@@ -86,7 +87,7 @@ function Follow() {
                     className="md:w-12 w-8 h-8 md:h-12 rounded-full"
                   />
                 </div>
-                <span className="text-gray-500 font-bold ml-6">
+                <span className="text-gray-500 font-bold ml-2">
                   @{user.name}
                 </span>
               </Link>

@@ -72,9 +72,9 @@ function Search() {
                 </div>
                 <div className="flex flex-col ml-3">
                   <span className="text-gray-500 font-bold">
-                    {profile.name}
+                    @{profile.name}
                   </span>
-                  <div className="text-xs my-1">
+                  <div className="text-xs my-1 text-gray-500">
                     {profile.location && (
                       <span>
                         <i className="fas fa-map-marker-alt mr-2 text-purple-500"></i>

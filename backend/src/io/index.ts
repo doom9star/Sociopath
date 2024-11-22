@@ -13,7 +13,7 @@ export const IORouter = (socket: AuthIORequest) => {
         n.read = true;
         await n.save();
       }
-      socket.emit("notifications:read:success");
+      s.emit("notifications:read:success");
     });
 
     socket.on("disconnect", () => sMgr.remove(user.pid));

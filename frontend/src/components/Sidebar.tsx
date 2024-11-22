@@ -1,6 +1,5 @@
 import { Menu, MenuProps } from "antd";
 import React, { useEffect } from "react";
-import { BsChatDots } from "react-icons/bs";
 import { CiLogout, CiUser } from "react-icons/ci";
 import { FaRegNewspaper } from "react-icons/fa6";
 import { HiOutlineCog8Tooth } from "react-icons/hi2";
@@ -32,11 +31,6 @@ const menu: MenuProps["items"] = [
     key: "explore",
     label: "Explore",
     icon: <TiWorldOutline />,
-  },
-  {
-    key: "chat",
-    label: "Chat",
-    icon: <BsChatDots />,
   },
   {
     key: "profile",
@@ -72,6 +66,7 @@ function Sidebar() {
     }
     return count;
   }, [notifications]);
+
   const hideNotifications = React.useCallback(() => {
     setShowNotifications(false);
   }, []);

@@ -108,19 +108,17 @@ function New() {
         onChange={(e) => setBody(e.target.value)}
       />
       <div className="mt-5 self-start flex">
-        <div className="w-40">
-          <Button
-            loading={uploading}
-            icon={<FaUpload />}
-            onClick={() => inputFileRef.current!.click()}
-          >
-            Upload
-          </Button>
-        </div>
+        <Button
+          loading={uploading}
+          icon={<FaUpload />}
+          onClick={() => inputFileRef.current!.click()}
+        >
+          Upload
+        </Button>
         <div className="ml-4 flex flex-wrap">
           {Object.entries(images).map(([id, { uri }]) => (
             <div className="w-24 relative mr-2 mb-2" key={id}>
-              <div className="absolute bg-white rounded-full px-1 -right-1 -top-1 cursor-pointer">
+              <div className="absolute bg-white rounded-full px-1 right-2 -top-2 cursor-pointer">
                 <i
                   className="fas fa-times text-purple-700 text-xs"
                   onClick={() => removeImage(id)}
@@ -128,7 +126,7 @@ function New() {
               </div>
               <img
                 src={uri}
-                className="rounded-md h-20 object-cover"
+                className="rounded-md w-20 h-20 object-cover"
                 alt="preview"
               />
             </div>

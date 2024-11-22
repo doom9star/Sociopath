@@ -1,9 +1,8 @@
 import Axios, { AxiosResponse } from "axios";
 import { IJsonResponse } from "./types";
 
-export const serverURL = "http://localhost:4000";
 export const axios = Axios.create({
-  baseURL: serverURL,
+  baseURL: process.env.REACT_APP_SERVER_URL,
   withCredentials: true,
 });
 

@@ -1,5 +1,6 @@
 import { Button } from "antd";
 import classNames from "classnames";
+import { fromZonedTime } from "date-fns-tz";
 import { produce } from "immer";
 import React from "react";
 import { MdDeleteOutline } from "react-icons/md";
@@ -162,7 +163,9 @@ function Post({ post, showDetailOnClick = true, postedBy }: Props) {
           </span>
         </div>
         <span className="text-gray-500 text-xs">
-          <ReactTimeAgo date={new Date(post.createdAt)} locale={"en-us"} />
+          <ReactTimeAgo
+            date={fromZonedTime(new Date(post.createdAt), "Asia/Kolkata")}
+          />
         </span>
       </div>
     </div>

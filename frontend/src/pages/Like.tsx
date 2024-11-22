@@ -2,7 +2,7 @@ import { Button, Input, Spin } from "antd";
 import { produce } from "immer";
 import React from "react";
 import { CiSearch } from "react-icons/ci";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaHeart } from "react-icons/fa6";
 import { useQuery, useQueryClient } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGlobalCtx } from "../context";
@@ -63,6 +63,7 @@ function Like() {
           prefix={<CiSearch />}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          className="mb-4"
         />
         {localData?.map((l) => {
           return (
@@ -73,7 +74,7 @@ function Like() {
                     ? "/home/profile"
                     : `/home/user/${l.profile.id}`
                 }
-                className="w-3/4 flex items-center p-2 cursor-pointer hover:underline"
+                className="no-underline w-full flex items-center p-2 cursor-pointer hover:underline"
               >
                 <div className="border border-gray-200 rounded-full p-1">
                   <img
@@ -85,9 +86,10 @@ function Like() {
                 <span className="text-gray-500 font-bold ml-6">
                   @{l.profile.name}
                 </span>
+                <FaHeart className="text-red-500 ml-auto" />
               </Link>
               {l.profile.id !== userID && (
-                <div>
+                <div className="ml-8">
                   {l.isFollowing ? (
                     <Button
                       onClick={() =>
